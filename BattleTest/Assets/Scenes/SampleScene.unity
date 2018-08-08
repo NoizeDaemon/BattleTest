@@ -125,7 +125,7 @@ GameObject:
   - component: {fileID: 9831827}
   m_Layer: 0
   m_Name: voxelTile_56 (25)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -216,7 +216,7 @@ GameObject:
   - component: {fileID: 48414959}
   m_Layer: 0
   m_Name: isometric_0052 (9)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -307,7 +307,7 @@ GameObject:
   - component: {fileID: 55082629}
   m_Layer: 0
   m_Name: voxelTile_01
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -398,7 +398,7 @@ GameObject:
   - component: {fileID: 66324626}
   m_Layer: 0
   m_Name: isometric_0052 (6)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -489,7 +489,7 @@ GameObject:
   - component: {fileID: 83869782}
   m_Layer: 0
   m_Name: isometric_0052 (4)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -581,7 +581,7 @@ GameObject:
   - component: {fileID: 87237665}
   m_Layer: 0
   m_Name: isometric_0055 (4)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -662,6 +662,97 @@ MonoBehaviour:
   _position: {x: 1, y: 4.5, z: 1}
   _size: {x: 1, y: 1, z: 1}
   _parent: {fileID: 0}
+--- !u!1 &110056528
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 110056529}
+  - component: {fileID: 110056531}
+  - component: {fileID: 110056530}
+  m_Layer: 0
+  m_Name: NoWalkTest
+  m_TagString: FloorTile_unwalkable
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &110056529
+Transform:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 110056528}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -9.903376, y: 7.083937, z: 5.8330293}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1522068617}
+  m_RootOrder: 98
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &110056530
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 110056528}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 21300000, guid: 244108f519cdeb34eb714a0f2b343c25, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1.7066667, y: 1.7066667}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
+--- !u!114 &110056531
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 110056528}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0176bd5bc42e4e64da89e5a9a1694249, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowBounds: 0
+  _position: {x: 0, y: 2.5, z: 12}
+  _size: {x: 1, y: 1, z: 1}
+  _parent: {fileID: 0}
 --- !u!1 &113796286
 GameObject:
   m_ObjectHideFlags: 0
@@ -674,7 +765,7 @@ GameObject:
   - component: {fileID: 113796288}
   m_Layer: 0
   m_Name: voxelTile_01 (6)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -765,7 +856,7 @@ GameObject:
   - component: {fileID: 116663078}
   m_Layer: 0
   m_Name: isometric_0052 (1)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -856,7 +947,7 @@ GameObject:
   - component: {fileID: 136077010}
   m_Layer: 0
   m_Name: voxelTile_01 (10)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -947,7 +1038,7 @@ GameObject:
   - component: {fileID: 141509084}
   m_Layer: 0
   m_Name: voxelTile_53 (11)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1038,7 +1129,7 @@ GameObject:
   - component: {fileID: 151910752}
   m_Layer: 0
   m_Name: voxelTile_56 (9)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1129,14 +1220,14 @@ GameObject:
   - component: {fileID: 168800982}
   m_Layer: 0
   m_Name: voxelTile_56 (27)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &168800981
 Transform:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 168800980}
@@ -1221,7 +1312,7 @@ GameObject:
   - component: {fileID: 170154613}
   m_Layer: 0
   m_Name: isometric_0037 (7)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1312,7 +1403,7 @@ GameObject:
   - component: {fileID: 223361451}
   m_Layer: 0
   m_Name: voxelTile_53 (12)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1403,7 +1494,7 @@ GameObject:
   - component: {fileID: 332378842}
   m_Layer: 0
   m_Name: voxelTile_56
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1494,7 +1585,7 @@ GameObject:
   - component: {fileID: 336118918}
   m_Layer: 0
   m_Name: isometric_0037 (18)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1585,7 +1676,7 @@ GameObject:
   - component: {fileID: 347965319}
   m_Layer: 0
   m_Name: voxelTile_56 (11)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1676,7 +1767,7 @@ GameObject:
   - component: {fileID: 371189293}
   m_Layer: 0
   m_Name: voxelTile_01 (3)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1767,7 +1858,7 @@ GameObject:
   - component: {fileID: 386225581}
   m_Layer: 0
   m_Name: isometric_0052 (5)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1858,7 +1949,7 @@ GameObject:
   - component: {fileID: 416187104}
   m_Layer: 0
   m_Name: isometric_0052 (12)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1950,7 +2041,7 @@ GameObject:
   - component: {fileID: 444160410}
   m_Layer: 0
   m_Name: isometric_0055 (7)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2043,7 +2134,7 @@ GameObject:
   - component: {fileID: 444488073}
   m_Layer: 0
   m_Name: voxelTile_53
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2134,7 +2225,7 @@ GameObject:
   - component: {fileID: 448489329}
   m_Layer: 0
   m_Name: voxelTile_53 (2)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2225,14 +2316,14 @@ GameObject:
   - component: {fileID: 459705635}
   m_Layer: 0
   m_Name: isometric_0037 (10)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &459705634
 Transform:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 459705633}
@@ -2316,7 +2407,7 @@ GameObject:
   - component: {fileID: 471969335}
   m_Layer: 0
   m_Name: voxelTile_56 (6)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2407,7 +2498,7 @@ GameObject:
   - component: {fileID: 492151159}
   m_Layer: 0
   m_Name: voxelTile_56 (4)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2498,7 +2589,7 @@ GameObject:
   - component: {fileID: 497033842}
   m_Layer: 0
   m_Name: voxelTile_56 (19)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2589,14 +2680,14 @@ GameObject:
   - component: {fileID: 516063074}
   m_Layer: 0
   m_Name: voxelTile_56 (21)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &516063073
 Transform:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 516063072}
@@ -2680,7 +2771,7 @@ GameObject:
   - component: {fileID: 546101762}
   m_Layer: 0
   m_Name: voxelTile_53 (6)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2772,7 +2863,7 @@ GameObject:
   - component: {fileID: 578411168}
   m_Layer: 0
   m_Name: isometric_0055 (3)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2865,7 +2956,7 @@ GameObject:
   - component: {fileID: 583829201}
   m_Layer: 0
   m_Name: voxelTile_56 (31)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2956,7 +3047,7 @@ GameObject:
   - component: {fileID: 589423042}
   m_Layer: 0
   m_Name: voxelTile_56 (1)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3047,7 +3138,7 @@ GameObject:
   - component: {fileID: 590125777}
   m_Layer: 0
   m_Name: voxelTile_01 (9)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3138,7 +3229,7 @@ GameObject:
   - component: {fileID: 611094264}
   m_Layer: 0
   m_Name: voxelTile_53 (10)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3229,7 +3320,7 @@ GameObject:
   - component: {fileID: 613415142}
   m_Layer: 0
   m_Name: voxelTile_56 (10)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3320,7 +3411,7 @@ GameObject:
   - component: {fileID: 629457301}
   m_Layer: 0
   m_Name: isometric_0037 (6)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3411,7 +3502,7 @@ GameObject:
   - component: {fileID: 643922850}
   m_Layer: 0
   m_Name: voxelTile_56 (23)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3502,7 +3593,7 @@ GameObject:
   - component: {fileID: 685646086}
   m_Layer: 0
   m_Name: isometric_0037 (3)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3593,7 +3684,7 @@ GameObject:
   - component: {fileID: 689929692}
   m_Layer: 0
   m_Name: isometric_0037 (14)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3684,7 +3775,7 @@ GameObject:
   - component: {fileID: 751735877}
   m_Layer: 0
   m_Name: voxelTile_56 (30)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3775,7 +3866,7 @@ GameObject:
   - component: {fileID: 776490423}
   m_Layer: 0
   m_Name: voxelTile_56 (22)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3866,7 +3957,7 @@ GameObject:
   - component: {fileID: 816968639}
   m_Layer: 0
   m_Name: voxelTile_56 (20)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4034,7 +4125,7 @@ GameObject:
   - component: {fileID: 940590343}
   m_Layer: 0
   m_Name: voxelTile_01 (4)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4125,7 +4216,7 @@ GameObject:
   - component: {fileID: 969551060}
   m_Layer: 0
   m_Name: voxelTile_01 (1)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4217,7 +4308,7 @@ GameObject:
   - component: {fileID: 971662033}
   m_Layer: 0
   m_Name: isometric_0055 (6)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4310,7 +4401,7 @@ GameObject:
   - component: {fileID: 1007154174}
   m_Layer: 0
   m_Name: isometric_0052 (3)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4401,6 +4492,7 @@ GameObject:
   - component: {fileID: 1040808859}
   - component: {fileID: 1040808858}
   - component: {fileID: 1040808857}
+  - component: {fileID: 1040808862}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -4512,6 +4604,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!70 &1040808862
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1040808856}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0.37}
+  m_Size: {x: 0.42, y: 0.72}
+  m_Direction: 0
 --- !u!1 &1065640530
 GameObject:
   m_ObjectHideFlags: 0
@@ -4524,7 +4631,7 @@ GameObject:
   - component: {fileID: 1065640532}
   m_Layer: 0
   m_Name: isometric_0037 (12)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4615,7 +4722,7 @@ GameObject:
   - component: {fileID: 1070276414}
   m_Layer: 0
   m_Name: voxelTile_56 (8)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4707,7 +4814,7 @@ GameObject:
   - component: {fileID: 1084382131}
   m_Layer: 0
   m_Name: voxelTile_56 (29)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4826,7 +4933,7 @@ GameObject:
   - component: {fileID: 1094798837}
   m_Layer: 0
   m_Name: isometric_0037
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4917,7 +5024,7 @@ GameObject:
   - component: {fileID: 1098218572}
   m_Layer: 0
   m_Name: voxelTile_01 (5)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5008,7 +5115,7 @@ GameObject:
   - component: {fileID: 1120568418}
   m_Layer: 0
   m_Name: isometric_0037 (1)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5100,7 +5207,7 @@ GameObject:
   - component: {fileID: 1126012371}
   m_Layer: 0
   m_Name: isometric_0055 (1)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5193,7 +5300,7 @@ GameObject:
   - component: {fileID: 1137611149}
   m_Layer: 0
   m_Name: voxelTile_56 (16)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5284,7 +5391,7 @@ GameObject:
   - component: {fileID: 1164824260}
   m_Layer: 0
   m_Name: voxelTile_53 (1)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5375,7 +5482,7 @@ GameObject:
   - component: {fileID: 1194469105}
   m_Layer: 0
   m_Name: voxelTile_56 (7)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5466,7 +5573,7 @@ GameObject:
   - component: {fileID: 1204697046}
   m_Layer: 0
   m_Name: voxelTile_56 (12)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5557,7 +5664,7 @@ GameObject:
   - component: {fileID: 1225204461}
   m_Layer: 0
   m_Name: isometric_0052 (10)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5648,7 +5755,7 @@ GameObject:
   - component: {fileID: 1229314176}
   m_Layer: 0
   m_Name: isometric_0037 (11)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5739,7 +5846,7 @@ GameObject:
   - component: {fileID: 1230887053}
   m_Layer: 0
   m_Name: voxelTile_01 (11)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5830,7 +5937,7 @@ GameObject:
   - component: {fileID: 1255907795}
   m_Layer: 0
   m_Name: voxelTile_53 (9)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5922,7 +6029,7 @@ GameObject:
   - component: {fileID: 1256080342}
   m_Layer: 0
   m_Name: isometric_0055 (8)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6015,7 +6122,7 @@ GameObject:
   - component: {fileID: 1258748272}
   m_Layer: 0
   m_Name: voxelTile_56 (3)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6106,7 +6213,7 @@ GameObject:
   - component: {fileID: 1266044238}
   m_Layer: 0
   m_Name: voxelTile_01 (8)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6198,7 +6305,7 @@ GameObject:
   - component: {fileID: 1278455655}
   m_Layer: 0
   m_Name: voxelTile_56 (28)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6317,7 +6424,7 @@ GameObject:
   - component: {fileID: 1304575570}
   m_Layer: 0
   m_Name: isometric_0037 (17)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6408,7 +6515,7 @@ GameObject:
   - component: {fileID: 1342396366}
   m_Layer: 0
   m_Name: isometric_0037 (16)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6499,7 +6606,7 @@ GameObject:
   - component: {fileID: 1368386137}
   m_Layer: 0
   m_Name: voxelTile_56 (24)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6590,7 +6697,7 @@ GameObject:
   - component: {fileID: 1379619676}
   m_Layer: 0
   m_Name: voxelTile_56 (26)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6681,7 +6788,7 @@ GameObject:
   - component: {fileID: 1386164250}
   m_Layer: 0
   m_Name: voxelTile_53 (7)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6760,6 +6867,100 @@ MonoBehaviour:
   _position: {x: 3, y: 1, z: -2}
   _size: {x: 1, y: 1, z: 1}
   _parent: {fileID: 0}
+--- !u!1 &1395739290
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 178766, guid: 4ccfdd3dd9e19454e85d0482c253d8bc,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1395739291}
+  - component: {fileID: 1395739293}
+  - component: {fileID: 1395739292}
+  m_Layer: 0
+  m_Name: isometric_0055 (2)
+  m_TagString: FloorTile_walkable
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1395739291
+Transform:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 476286, guid: 4ccfdd3dd9e19454e85d0482c253d8bc,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1395739290}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.4180939, y: 2.9651983, z: 0.08533591}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1522068617}
+  m_RootOrder: 97
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &1395739292
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 21219998, guid: 4ccfdd3dd9e19454e85d0482c253d8bc,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1395739290}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RenderingLayerMask: 4294967295
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 21300000, guid: bd48400dd38bc8b458f79b5cb36b3184, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1, y: 1}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
+--- !u!114 &1395739293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1395739290}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0176bd5bc42e4e64da89e5a9a1694249, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowBounds: 0
+  _position: {x: 1, y: 2.5, z: 1}
+  _size: {x: 1, y: 1, z: 1}
+  _parent: {fileID: 0}
 --- !u!1 &1404538306
 GameObject:
   m_ObjectHideFlags: 0
@@ -6772,7 +6973,7 @@ GameObject:
   - component: {fileID: 1404538308}
   m_Layer: 0
   m_Name: voxelTile_01 (2)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6973,6 +7174,8 @@ Transform:
   - {fileID: 1304575569}
   - {fileID: 336118917}
   - {fileID: 1798839845}
+  - {fileID: 1395739291}
+  - {fileID: 110056529}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6988,7 +7191,7 @@ GameObject:
   - component: {fileID: 1523033663}
   m_Layer: 0
   m_Name: voxelTile_56 (2)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7079,7 +7282,7 @@ GameObject:
   - component: {fileID: 1545730611}
   m_Layer: 0
   m_Name: voxelTile_53 (3)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7168,16 +7371,17 @@ GameObject:
   - component: {fileID: 1600227361}
   - component: {fileID: 1600227363}
   - component: {fileID: 1600227362}
+  - component: {fileID: 1600227364}
   m_Layer: 0
   m_Name: voxelTile_56 (15)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &1600227361
 Transform:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1600227360}
@@ -7249,6 +7453,34 @@ MonoBehaviour:
   _position: {x: -4, y: 1, z: 0}
   _size: {x: 1, y: 1, z: 1}
   _parent: {fileID: 0}
+--- !u!60 &1600227364
+PolygonCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1600227360}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1.4230769, y: 1.6410257}
+    newSize: {x: 1.4230769, y: 1.6410257}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: -0.6701921, y: 0.40922928}
+      - {x: -0.0065978765, y: -0.012937784}
+      - {x: 0.7211595, y: 0.38887334}
+      - {x: 0.010668278, y: 0.8130324}
 --- !u!1 &1601717472
 GameObject:
   m_ObjectHideFlags: 0
@@ -7261,7 +7493,7 @@ GameObject:
   - component: {fileID: 1601717474}
   m_Layer: 0
   m_Name: isometric_0052 (11)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7352,7 +7584,7 @@ GameObject:
   - component: {fileID: 1624763355}
   m_Layer: 0
   m_Name: voxelTile_53 (5)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7443,7 +7675,7 @@ GameObject:
   - component: {fileID: 1628549697}
   m_Layer: 0
   m_Name: voxelTile_56 (32)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7534,7 +7766,7 @@ GameObject:
   - component: {fileID: 1639589659}
   m_Layer: 0
   m_Name: voxelTile_56 (14)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7653,7 +7885,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SortingStrategy: {fileID: 1779433088}
-  Dirty: 0
+  Dirty: 1
   _isoAngle: 26.565
   _xRot: 35.625
   _yRot: 45
@@ -7684,7 +7916,7 @@ GameObject:
   - component: {fileID: 1788198021}
   m_Layer: 0
   m_Name: isometric_0037 (2)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7775,7 +8007,7 @@ GameObject:
   - component: {fileID: 1798839846}
   m_Layer: 0
   m_Name: isometric_0037 (19)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7866,7 +8098,7 @@ GameObject:
   - component: {fileID: 1818413183}
   m_Layer: 0
   m_Name: isometric_0052 (2)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7957,7 +8189,7 @@ GameObject:
   - component: {fileID: 1825066283}
   m_Layer: 0
   m_Name: voxelTile_01 (7)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8048,7 +8280,7 @@ GameObject:
   - component: {fileID: 1841686943}
   m_Layer: 0
   m_Name: isometric_0037 (8)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8139,7 +8371,7 @@ GameObject:
   - component: {fileID: 1859545631}
   m_Layer: 0
   m_Name: isometric_0052 (8)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8230,7 +8462,7 @@ GameObject:
   - component: {fileID: 1870586952}
   m_Layer: 0
   m_Name: voxelTile_53 (17)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8321,7 +8553,7 @@ GameObject:
   - component: {fileID: 1891345027}
   m_Layer: 0
   m_Name: voxelTile_56 (13)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8412,7 +8644,7 @@ GameObject:
   - component: {fileID: 1901040406}
   m_Layer: 0
   m_Name: isometric_0037 (9)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8503,7 +8735,7 @@ GameObject:
   - component: {fileID: 1911153046}
   m_Layer: 0
   m_Name: voxelTile_56 (18)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8594,7 +8826,7 @@ GameObject:
   - component: {fileID: 1930718309}
   m_Layer: 0
   m_Name: isometric_0052 (7)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8673,6 +8905,47 @@ MonoBehaviour:
   _position: {x: 3, y: 3, z: 6}
   _size: {x: 1, y: 1, z: 1}
   _parent: {fileID: 0}
+--- !u!1 &1942968600
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1942968602}
+  - component: {fileID: 1942968601}
+  m_Layer: 0
+  m_Name: FloorHandler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1942968601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1942968600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a8fe772bcaf3934d93356f28fa9623a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MapInfo: []
+--- !u!4 &1942968602
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1942968600}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.1133232, y: 0.37350982, z: -3.1794317}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1978922519
 GameObject:
   m_ObjectHideFlags: 0
@@ -8685,7 +8958,7 @@ GameObject:
   - component: {fileID: 1978922521}
   m_Layer: 0
   m_Name: isometric_0037 (13)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8893,7 +9166,7 @@ GameObject:
   - component: {fileID: 1997867837}
   m_Layer: 0
   m_Name: voxelTile_53 (4)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8984,7 +9257,7 @@ GameObject:
   - component: {fileID: 2055238632}
   m_Layer: 0
   m_Name: voxelTile_56 (5)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9075,7 +9348,7 @@ GameObject:
   - component: {fileID: 2070002392}
   m_Layer: 0
   m_Name: isometric_0037 (15)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9166,7 +9439,7 @@ GameObject:
   - component: {fileID: 2087960272}
   m_Layer: 0
   m_Name: isometric_0052
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9257,7 +9530,7 @@ GameObject:
   - component: {fileID: 2094901688}
   m_Layer: 0
   m_Name: voxelTile_56 (17)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9348,7 +9621,7 @@ GameObject:
   - component: {fileID: 2099147361}
   m_Layer: 0
   m_Name: voxelTile_56 (33)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9440,14 +9713,14 @@ GameObject:
   - component: {fileID: 2137537201}
   m_Layer: 0
   m_Name: isometric_0055 (5)
-  m_TagString: Untagged
+  m_TagString: FloorTile_walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &2137537200
 Transform:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 476286, guid: 4ccfdd3dd9e19454e85d0482c253d8bc,
     type: 2}
   m_PrefabInternal: {fileID: 0}
