@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Assets.UltimateIsometricToolkit.Scripts.Core;
 using UnityEngine;
@@ -17,12 +18,13 @@ public class FloorHandler : MonoBehaviour
         public bool standable;
     }
 
+    [System.Serializable]
     public class GridInfo
     {
         public GameObject go;
         public Vector3 isoPos;
         public SpriteRenderer rend;
-        public Vector4 hDif;
+        public List<float> hDif;
     }
 
     public GameObject gridPrefab;
@@ -81,21 +83,21 @@ public class FloorHandler : MonoBehaviour
         {
             var xP = (Grid.Find(x => x.isoPos.x == g.isoPos.x + 1) != null)
                 ? Mathf.Abs(Grid.Find(x => x.isoPos.x == g.isoPos.x + 1).isoPos.y - g.isoPos.y)
-                : -1;
+                : Single.PositiveInfinity;
 
             var xN = (Grid.Find(x => x.isoPos.x == g.isoPos.x - 1) != null)
                 ? Mathf.Abs(Grid.Find(x => x.isoPos.x == g.isoPos.x - 1).isoPos.y - g.isoPos.y)
-                : -1;
+                : Single.PositiveInfinity;
 
             var zP = (Grid.Find(x => x.isoPos.z == g.isoPos.z + 1) != null)
                 ? Mathf.Abs(Grid.Find(x => x.isoPos.z == g.isoPos.z + 1).isoPos.y - g.isoPos.y)
-                : -1;
+                : Single.PositiveInfinity;
 
             var zN = (Grid.Find(x => x.isoPos.x == g.isoPos.z - 1) != null)
                 ? Mathf.Abs(Grid.Find(x => x.isoPos.x == g.isoPos.z - 1).isoPos.y - g.isoPos.y)
-                : -1;
+                : Single.PositiveInfinity;
 
-            g.hDif = new Vector4(xP, xN, zP, zN);
+            g.hDif = new List<float>();
         }
 
         UpdateMovementGrid();
@@ -126,8 +128,34 @@ public class FloorHandler : MonoBehaviour
 
         foreach (var c in inReach)
         {
-            c.go.SetActive(true);
-            Debug.Log(c.go.name);
+            //if(Mathf.Abs(c.isoPos.x - playerIsoPos.x) + Mathf.Abs(c.isoPos.z - playerIsoPos.z) == playerMS) c.go.SetActive(true); // Outline
+            //c.go.SetActive(true); // All
+   
+            
+        }
+
+        List<GridInfo> aList = new List<GridInfo>();
+        List<GridInfo> bList = new List<GridInfo>();
+
+        var current = inReach.Find(x => x.isoPos.x == playerIsoPos.x && x.isoPos.y == playerIsoPos.y);
+        var target = inReach.Find(x => x.isoPos.x == current.isoPos.x + 1 && x.isoPos.y == current.isoPos.y);
+
+        //if (inReach.Find(x => x.isoPos.x == current.isoPos.x + 1 && x.isoPos.y == current.isoPos.y) != null && !aList.Contains(current))
+        //{
+        //    if (current.hDif.x <= playerJH) aList.Add(current);
+        //    else bList.Add(current);
+        //}
+        for(int i = -1; i <= 1; i++)
+        {
+            for (int j = -1; j <= 1; j++)
+            {
+                target = inReach.Find(x => x.isoPos.x == current.isoPos.x + i && x.isoPos.y == current.isoPos.y + j);
+                if (target != null)
+                {
+                    if (current.hDif[0] <= playerJH) aList.Add(current);
+                    else bList.Add(current);
+                }
+            }
         }
 
     }
