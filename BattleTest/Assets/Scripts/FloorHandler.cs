@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Remoting.Channels;
 using Assets.UltimateIsometricToolkit.Scripts.Core;
 using UnityEngine;
 using UltimateIsometricToolkit;
+using UnityEditor;
+
 
 public class FloorHandler : MonoBehaviour
 {
@@ -23,8 +27,7 @@ public class FloorHandler : MonoBehaviour
     {
         public GameObject go;
         public Vector3 isoPos;
-        public SpriteRenderer rend;
-        public List<float> hDif;
+        public GameObject[] neighbour = new GameObject[4];
     }
 
     public GameObject gridPrefab;
@@ -72,8 +75,7 @@ public class FloorHandler : MonoBehaviour
                 GridInfo temp1 = new GridInfo
                 {
                     go = grid,
-                    isoPos = o.GetComponent<IsoTransform>().Position,
-                    rend = grid.GetComponent<SpriteRenderer>()
+                    isoPos = o.GetComponent<IsoTransform>().Position
                 };
                 Grid.Add(temp1);
                 grid.SetActive(false);
@@ -81,23 +83,47 @@ public class FloorHandler : MonoBehaviour
         }
         foreach (GridInfo g in Grid)
         {
-            var xP = (Grid.Find(x => x.isoPos.x == g.isoPos.x + 1) != null)
-                ? Mathf.Abs(Grid.Find(x => x.isoPos.x == g.isoPos.x + 1).isoPos.y - g.isoPos.y)
-                : Single.PositiveInfinity;
+            //Neighbours
 
-            var xN = (Grid.Find(x => x.isoPos.x == g.isoPos.x - 1) != null)
-                ? Mathf.Abs(Grid.Find(x => x.isoPos.x == g.isoPos.x - 1).isoPos.y - g.isoPos.y)
-                : Single.PositiveInfinity;
+            try
+            {
+                g.neighbour[0] = Grid.Find(x => x.isoPos.x == g.isoPos.x + 1).go;
+            }
+            catch
+            {
+                g.neighbour[0] = null;
+            }
+            try
+            {
+                g.neighbour[1] = Grid.Find(x => x.isoPos.x == g.isoPos.x - 1).go;
+            }
+            catch
+            {
+                g.neighbour[1] = null;
+            }
+            try
+            {
+                g.neighbour[2] = Grid.Find(x => x.isoPos.z == g.isoPos.z + 1).go;
+            }
+            catch
+            {
+                g.neighbour[2] = null;
+            }
+            try
+            {
+                g.neighbour[3] = Grid.Find(x => x.isoPos.z == g.isoPos.z - 1).go;
+            }
+            catch
+            {
+                g.neighbour[3] = null;
+            }
 
-            var zP = (Grid.Find(x => x.isoPos.z == g.isoPos.z + 1) != null)
-                ? Mathf.Abs(Grid.Find(x => x.isoPos.z == g.isoPos.z + 1).isoPos.y - g.isoPos.y)
-                : Single.PositiveInfinity;
 
-            var zN = (Grid.Find(x => x.isoPos.x == g.isoPos.z - 1) != null)
-                ? Mathf.Abs(Grid.Find(x => x.isoPos.x == g.isoPos.z - 1).isoPos.y - g.isoPos.y)
-                : Single.PositiveInfinity;
-
-            g.hDif = new List<float>();
+            
+            
+            //var xP = (Grid.Find(x => x.isoPos.x == g.isoPos.x + 1) != null)
+            //    ? Mathf.Abs(Grid.Find(x => x.isoPos.x == g.isoPos.x + 1).isoPos.y - g.isoPos.y)
+            //    : Single.PositiveInfinity;
         }
 
         UpdateMovementGrid();
@@ -134,29 +160,69 @@ public class FloorHandler : MonoBehaviour
             
         }
 
-        List<GridInfo> aList = new List<GridInfo>();
-        List<GridInfo> bList = new List<GridInfo>();
+        List<GridInfo> aList = new List<GridInfo>(); //targets that met the hDif criteria
+        List<GridInfo> bList = new List<GridInfo>(); //targets that did not meet the hDif criteria
+        List<GridInfo> cList = new List<GridInfo>(); //checked currents
 
-        var current = inReach.Find(x => x.isoPos.x == playerIsoPos.x && x.isoPos.y == playerIsoPos.y);
-        var target = inReach.Find(x => x.isoPos.x == current.isoPos.x + 1 && x.isoPos.y == current.isoPos.y);
+        var current = inReach.Find(x => x.isoPos.x == playerIsoPos.x && x.isoPos.z == playerIsoPos.z);
+        var target = inReach.Find(x => x.isoPos.x == current.isoPos.x + 1 && x.isoPos.z == current.isoPos.z);
 
         //if (inReach.Find(x => x.isoPos.x == current.isoPos.x + 1 && x.isoPos.y == current.isoPos.y) != null && !aList.Contains(current))
         //{
         //    if (current.hDif.x <= playerJH) aList.Add(current);
         //    else bList.Add(current);
         //}
-        for(int i = -1; i <= 1; i++)
+
+        int e = 1; //exceptions
+        int n = 0; //for index
+
+        while(n < aList.Count + e)
         {
-            for (int j = -1; j <= 1; j++)
+            for (int i = -1; i <= 1; i++)
             {
-                target = inReach.Find(x => x.isoPos.x == current.isoPos.x + i && x.isoPos.y == current.isoPos.y + j);
-                if (target != null)
+                for (int j = -1; j <= 1; j++)
                 {
-                    if (current.hDif[0] <= playerJH) aList.Add(current);
-                    else bList.Add(current);
+                    if (i != 0 && j != 0 || i == 0 && j == 0) continue;
+                    try
+                    {
+                        target = inReach.Find(x => x.isoPos.x == current.isoPos.x + i && x.isoPos.z == current.isoPos.z + j);
+                        Debug.Log("Tried & found target " + target.go.name);
+                    }
+                    catch
+                    {
+                        target = null;
+                        Debug.Log("Target is null");
+                    }
+
+                    if (target != null && !aList.Contains(target) && !cList.Contains(target))
+                    {
+                        if (HeightDifferenceCheck(current, target) <= playerJH) aList.Add(target);
+                        else bList.Add(current);;
+                    }
                 }
             }
+            cList.Add(current);
+            try
+            {
+                current = aList[n];
+                n++;
+            }
+            catch
+            {
+                Debug.Log("No more aList elements.");
+                break;
+            }
         }
+        foreach (GridInfo g in aList)
+        {
+            g.go.SetActive(true);
+        }
+    }
 
+    private float HeightDifferenceCheck(GridInfo a, GridInfo b)
+    {
+        float hDif = Mathf.Abs(a.isoPos.y - b.isoPos.y);
+        Debug.Log("The height difference is " + hDif);
+        return hDif;
     }
 }
