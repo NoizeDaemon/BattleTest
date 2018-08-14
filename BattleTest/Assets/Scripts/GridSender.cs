@@ -13,9 +13,9 @@ public class GridSender : MonoBehaviour
 	void Start ()
 	{
 	    floorHandler = GameObject.Find("FloorHandler").GetComponent<FloorHandler>();
-	    var all = this.name.Split('/');
-        pos = new Vector3(float.Parse(all[0]), float.Parse(all[1]), float.Parse(all[2]));
-	}
+        //var all = this.name.Split('/');
+        //pos = new Vector3(float.Parse(all[0]), float.Parse(all[1]), float.Parse(all[2]));
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -30,6 +30,6 @@ public class GridSender : MonoBehaviour
     private void OnMouseUpAsButton()
     {
         //Debug.Log("Clicked: " + this.name);
-        floorHandler.GridClick(pos.x, pos.y, pos.z);
+        StartCoroutine(floorHandler.GridClick(this.gameObject));
     }
 }

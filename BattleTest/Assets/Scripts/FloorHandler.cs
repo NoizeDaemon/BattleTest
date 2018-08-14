@@ -11,6 +11,9 @@ using UnityEditor;
 
 public class FloorHandler : MonoBehaviour
 {
+    public GameHandler gameHandler;
+    public bool initComplete;
+    public bool calcComplete;
 
     [System.Serializable]
     public class TileInfo
@@ -27,14 +30,41 @@ public class FloorHandler : MonoBehaviour
     {
         public GameObject go;
         public Vector3 isoPos;
-        public GameObject[] neighbour = new GameObject[4];
+        public bool passable = true;
+        public bool standable = true;
+        public List<int> path;
+        public List<float> pathDif;
     }
 
+    public class Path
+    {
+        public GridInfo target;
+        public List<char> dir;
+        public List<float> h;
+    }
+
+    public class aStarNode
+    {
+        public GridInfo tile;
+        public float h; //heuristic
+        public float g; //movecost
+        public float f; //sum
+        public GridInfo parent;
+    }
+    public List<GameObject> gg;
+    public List<GameObject> bg;
     public GameObject gridPrefab;
-    public GameObject activePlayer;
+    public IsoTransform activePlayerIsoTransform;
     public Vector3 playerIsoPos;
+
+    public float walkSpeed;
+    private Animator playerAnim;
     public List<TileInfo> Map;
     public List<GridInfo> Grid;
+
+    private List<GridInfo>[] pathfinding;
+    private List<GridInfo> inReach, aList, bList; //inReach = every floortile in movement distance, aList = inReach checked for height, minimal movement distance, bList = -,,- any move distance
+    private GridInfo origin, current, target;
 
     public int playerMS;
     public float playerJH;
@@ -43,6 +73,8 @@ public class FloorHandler : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        gg = new List<GameObject>(GameObject.FindGameObjectsWithTag("Player"));
+        bg = new List<GameObject>(GameObject.FindGameObjectsWithTag("Enemy"));
         Map = new List<TileInfo>();
         Grid = new List<GridInfo>();
         List<GameObject> allTiles = new List<GameObject>();
@@ -81,52 +113,33 @@ public class FloorHandler : MonoBehaviour
                 grid.SetActive(false);
             }
         }
-        foreach (GridInfo g in Grid)
+
+        foreach(GameObject p in gg)
         {
-            //Neighbours
-
             try
             {
-                g.neighbour[0] = Grid.Find(x => x.isoPos.x == g.isoPos.x + 1).go;
+                GridInfo g = Grid.Find(x => x.isoPos + new Vector3(0, 0.5f, 0) == p.GetComponent<IsoTransform>().Position);
+                g.standable = false;
             }
             catch
             {
-                g.neighbour[0] = null;
+                Debug.Log("Character " + p.name + " is not standing on a tile!");
             }
-            try
-            {
-                g.neighbour[1] = Grid.Find(x => x.isoPos.x == g.isoPos.x - 1).go;
-            }
-            catch
-            {
-                g.neighbour[1] = null;
-            }
-            try
-            {
-                g.neighbour[2] = Grid.Find(x => x.isoPos.z == g.isoPos.z + 1).go;
-            }
-            catch
-            {
-                g.neighbour[2] = null;
-            }
-            try
-            {
-                g.neighbour[3] = Grid.Find(x => x.isoPos.z == g.isoPos.z - 1).go;
-            }
-            catch
-            {
-                g.neighbour[3] = null;
-            }
-
-
-            
-            
-            //var xP = (Grid.Find(x => x.isoPos.x == g.isoPos.x + 1) != null)
-            //    ? Mathf.Abs(Grid.Find(x => x.isoPos.x == g.isoPos.x + 1).isoPos.y - g.isoPos.y)
-            //    : Single.PositiveInfinity;
         }
-
-        UpdateMovementGrid();
+        foreach (GameObject p in bg)
+        {
+            try
+            {
+                GridInfo g = Grid.Find(x => x.isoPos + new Vector3(0, 0.5f, 0) == p.GetComponent<IsoTransform>().Position);
+                g.standable = false;
+                g.passable = false;
+            }
+            catch
+            {
+                Debug.Log("Character " + p.name + " is not standing on a tile!");
+            }
+        }
+        initComplete = true;
     }
 
     // Update is called once per frame
@@ -135,94 +148,270 @@ public class FloorHandler : MonoBehaviour
 
     }
 
-    public void GridClick(float x, float y, float z)
+    public void UpdateMovementGrid(GameHandler.CharInfo chara)
     {
-        Debug.Log(x + "/" + y + "/" + z);
-
-    }
-
-    public void UpdateMovementGrid()
-    {
+        GameObject activePlayer = chara.go;
+        Debug.Log("Started UpdateMovementGrid");
         playerIsoPos = activePlayer.GetComponent<IsoTransform>().Position;
-        var inReach = Grid.FindAll(x => Mathf.Abs(x.isoPos.x - playerIsoPos.x) + Mathf.Abs(x.isoPos.z - playerIsoPos.z) <= playerMS);// && Mathf.Abs(x.isoPos.y - playerIsoPos.y + 0.5f) <= playerJH);
-        
-        //var onSameX = inReach.FindAll(x => x.isoPos.x == playerIsoPos.x);
-        //foreach (GridInfo g in onSameX)
-        //{
-        //    g.go.SetActive(true);
-        //}
+        playerAnim = activePlayer.GetComponent<Animator>();
+        activePlayerIsoTransform = activePlayer.GetComponent<IsoTransform>();
+        inReach = Grid.FindAll(x => Mathf.Abs(x.isoPos.x - playerIsoPos.x) + Mathf.Abs(x.isoPos.z - playerIsoPos.z) <= playerMS && x.passable);// && Mathf.Abs(x.isoPos.y - playerIsoPos.y + 0.5f) <= playerJH);
+        origin = inReach.Find(x => x.isoPos.x == playerIsoPos.x && x.isoPos.z == playerIsoPos.z);
 
-        foreach (var c in inReach)
-        {
-            //if(Mathf.Abs(c.isoPos.x - playerIsoPos.x) + Mathf.Abs(c.isoPos.z - playerIsoPos.z) == playerMS) c.go.SetActive(true); // Outline
-            //c.go.SetActive(true); // All
-   
-            
-        }
-
-        List<GridInfo> aList = new List<GridInfo>(); //targets that met the hDif criteria
-        List<GridInfo> bList = new List<GridInfo>(); //targets that did not meet the hDif criteria
+        aList = new List<GridInfo>(); //targets that met the hDif criteria
         List<GridInfo> cList = new List<GridInfo>(); //checked currents
+        bList = new List<GridInfo>(); //alternatives
 
-        var current = inReach.Find(x => x.isoPos.x == playerIsoPos.x && x.isoPos.z == playerIsoPos.z);
-        var target = inReach.Find(x => x.isoPos.x == current.isoPos.x + 1 && x.isoPos.z == current.isoPos.z);
-
-        //if (inReach.Find(x => x.isoPos.x == current.isoPos.x + 1 && x.isoPos.y == current.isoPos.y) != null && !aList.Contains(current))
-        //{
-        //    if (current.hDif.x <= playerJH) aList.Add(current);
-        //    else bList.Add(current);
-        //}
-
-        int e = 1; //exceptions
-        int n = 0; //for index
-
-        while(n < aList.Count + e)
+        pathfinding = new List<GridInfo>[playerMS];
+        pathfinding[0] = inReach.FindAll(x => CarthesianCoords(x).magnitude == 1 && Mathf.Abs(HeightDifferenceCheck(origin, x)) <= playerJH);
+        foreach(GridInfo g in pathfinding[0])
         {
-            for (int i = -1; i <= 1; i++)
-            {
-                for (int j = -1; j <= 1; j++)
-                {
-                    if (i != 0 && j != 0 || i == 0 && j == 0) continue;
-                    try
-                    {
-                        target = inReach.Find(x => x.isoPos.x == current.isoPos.x + i && x.isoPos.z == current.isoPos.z + j);
-                        Debug.Log("Tried & found target " + target.go.name);
-                    }
-                    catch
-                    {
-                        target = null;
-                        Debug.Log("Target is null");
-                    }
+            g.path = new List<int>();
+            if (CarthesianCoords(g).x == 1) g.path.Add(0);
+            else if (CarthesianCoords(g).x == -1) g.path.Add(2);
+            else if (CarthesianCoords(g).y == 1) g.path.Add(3);
+            else if (CarthesianCoords(g).y == -1) g.path.Add(1);
+            g.pathDif = new List<float>();
+            g.pathDif.Add(HeightDifferenceCheck(origin, g));
+        }
+        cList.Add(origin);
+        aList.AddRange(pathfinding[0]);
 
-                    if (target != null && !aList.Contains(target) && !cList.Contains(target))
+        for(int p = 0; p < playerMS - 1; p++)
+        {
+            pathfinding[p + 1] = new List<GridInfo>();
+            foreach(GridInfo g in pathfinding[p])
+            {
+                current = g;
+                Vector2 currentPos = CarthesianCoords(current);
+                //Debug.Log("Started checking for: " + currentPos);
+                for (int i = -1; i <= 1; i++)
+                {
+                    for (int j = -1; j <= 1; j++)
                     {
-                        if (HeightDifferenceCheck(current, target) <= playerJH) aList.Add(target);
-                        else bList.Add(current);;
+                        if (i != 0 && j != 0 || i == 0 && j == 0) continue;
+
+                        target = CarthesianFind(inReach, currentPos.x + i, currentPos.y + j);
+
+                        if (target != null)
+                        {
+                            if (Mathf.Abs(HeightDifferenceCheck(current, target)) <= playerJH)
+                            {
+                                if (!aList.Contains(target) && !cList.Contains(target))
+                                {
+                                    target.path = new List<int>();
+                                    target.path.AddRange(current.path);
+                                    if (i == 1) target.path.Add(0);
+                                    else if (i == -1) target.path.Add(2);
+                                    else if (j == 1) target.path.Add(3);
+                                    else if (j == -1) target.path.Add(1);
+                                    target.pathDif = new List<float>();
+                                    target.pathDif.AddRange(current.pathDif);
+                                    target.pathDif.Add(HeightDifferenceCheck(current, target));
+                                    aList.Add(target);
+                                }
+                                else
+                                {
+                                    GridInfo newTarget = new GridInfo
+                                    {
+                                        go = target.go,
+                                        isoPos = target.isoPos                                        
+                                    };
+                                    newTarget.path = new List<int>();
+                                    try
+                                    {
+                                        newTarget.path.AddRange(current.path);
+                                    }
+                                    catch
+                                    {
+                                        //Debug.Log("Nothing to add yet.");
+                                    }
+                                    if (i == 1) newTarget.path.Add(0);
+                                    else if (i == -1) newTarget.path.Add(2);
+                                    else if (j == 1) newTarget.path.Add(3);
+                                    else if (j == -1) newTarget.path.Add(1);
+                                    newTarget.pathDif = new List<float>();
+                                    try
+                                    {
+                                        newTarget.pathDif.AddRange(current.pathDif);
+                                    }
+                                    catch
+                                    {
+                                        //Debug.Log("Nothing to add yet.");
+                                    }
+                                    newTarget.pathDif.Add(HeightDifferenceCheck(current, newTarget));
+                                    bList.Add(newTarget);
+                                }
+                                    
+                                pathfinding[p + 1].Add(target);
+                            }
+                            //else Debug.Log("HeightDifferenceCheck failed for: " + (currentPos.x + i) + "/" + (currentPos.y + j));
+                        }
+                        //else if (target == null) Debug.Log("Target is null: " + (currentPos.x + i) + "/" + (currentPos.y + j));
+                        //else if (aList.Contains(target)) Debug.Log("Target is already in aList: " + (currentPos.x + i) + "/" + (currentPos.y + j));
+                        //else if (cList.Contains(target)) Debug.Log("Target is already in cList: " + (currentPos.x + i) + "/" + (currentPos.y + j));
                     }
                 }
             }
-            cList.Add(current);
-            try
-            {
-                current = aList[n];
-                n++;
-            }
-            catch
-            {
-                Debug.Log("No more aList elements.");
-                break;
-            }
         }
-        foreach (GridInfo g in aList)
+        gameHandler.activeChar.movable = aList;
+        calcComplete = true;
+        //foreach (GridInfo g in aList)
+        //{
+        //    if(g.standable) g.go.SetActive(true);
+        //}
+        //gameHandler.canBeCancelled = true;
+        //gameHandler.actionButton[0].interactable = true;
+    }
+
+    public void DisplayMovementGrid(GameHandler.CharInfo chara)
+    {
+        foreach (GridInfo g in chara.movable)
         {
-            g.go.SetActive(true);
+            if (g.standable) g.go.SetActive(true);
         }
     }
 
+    public IEnumerator GridClick(GameObject clickedGo)
+    {
+        Debug.Log("Coroutine started.");
+        Debug.Log("Clicked GO: " + clickedGo.name);
+        GridInfo c = aList.Find(x => x.go == clickedGo);
+        //for (int i = 0; i < c.path.Count; i++) Debug.Log("The " + i + " element of cPath is " + c.path[i]);
+        //List<GridInfo> alts = bList.FindAll(x => x.go == c.go && x.path.Count == c.path.Count);
+        //for(int n = 0; n < alts.Count; n++)
+        //{
+        //    Debug.Log("The " + n + " altPath has the following directions:");
+        //    for (int i = 0; i < alts[n].path.Count; i++) Debug.Log("The " + i + " element of the " + n + " Path is " + alts[n].path[i]);
+        //}
+
+
+
+        foreach(GridInfo g in aList)
+        {
+            if (g != c) g.go.SetActive(false);
+        }
+        Vector3 v = new Vector3(0, 0, 0);
+        Vector3 newPos = new Vector3(0, 0, 0);
+        Vector3 roundPos = new Vector3(0, 0, 0);
+        //float startTime = 0;
+        
+        playerAnim.SetBool("isWalking", true);
+        for (int i = 0; i < c.path.Count; i++)
+        {
+            Debug.Log(c.path[i]);
+            switch (c.path[i])
+            {
+                case 3:
+                    playerAnim.SetBool("directionUp", true);
+                    playerAnim.SetBool("directionLeft", true);
+                    v = new Vector3(0, 0, 1);
+                    //Debug.Log("West");
+                    break;
+                case 0:
+                    playerAnim.SetBool("directionUp", true);
+                    playerAnim.SetBool("directionLeft", false);
+                    v = new Vector3(1, 0, 0);
+                    //Debug.Log("North");
+                    break;
+                case 1:
+                    playerAnim.SetBool("directionUp", false);
+                    playerAnim.SetBool("directionLeft", false);
+                    v = new Vector3(0, 0, -1);
+                    //Debug.Log("East");
+                    break;
+                case 2:
+                    playerAnim.SetBool("directionUp", false);
+                    playerAnim.SetBool("directionLeft", true);
+                    v = new Vector3(-1, 0, 0);
+                    //Debug.Log("South");
+                    break;
+            }
+            if (i >= 1 && c.path[i - 1] != c.path[i])
+            {
+                yield return new WaitForSeconds(0.3f);
+            }
+            if (i == c.path.Count - 1) c.go.GetComponent<SpriteRenderer>().enabled = false;
+            //startTime = Time.time;
+            //Debug.Log(newPos);
+            if(c.pathDif[i] == 0)
+            {
+                newPos = activePlayerIsoTransform.Position + v;
+                while (roundPos != newPos)
+                {
+                    activePlayerIsoTransform.Translate(v * walkSpeed);
+                    roundPos = new Vector3(Mathf.Round(activePlayerIsoTransform.Position.x * 100) / 100, activePlayerIsoTransform.Position.y, Mathf.Round(activePlayerIsoTransform.Position.z * 100) / 100);
+                    yield return null;
+                }
+                activePlayerIsoTransform.Position = newPos;
+                //yield return new WaitUntil(() => activePlayer.GetComponent<IsoTransform>().Position == newPos);
+            }
+            else
+            {
+                newPos = activePlayerIsoTransform.Position + v * 0.4f;
+                while (roundPos != newPos)
+                {
+                    activePlayerIsoTransform.Translate(v * walkSpeed);
+                    roundPos = new Vector3(Mathf.Round(activePlayerIsoTransform.Position.x * 100) / 100, activePlayerIsoTransform.Position.y, Mathf.Round(activePlayerIsoTransform.Position.z * 100) / 100);
+                    yield return null;
+                }
+                activePlayerIsoTransform.Position = newPos;
+                newPos = activePlayerIsoTransform.Position + v * 0.2f + new Vector3(0, c.pathDif[i], 0);
+                while (roundPos != newPos)
+                {
+                    activePlayerIsoTransform.Translate((v * 0.2f + new Vector3(0, c.pathDif[i], 0)) * walkSpeed);
+                    roundPos = new Vector3(Mathf.Round(activePlayerIsoTransform.Position.x * 100) / 100, Mathf.Round(activePlayerIsoTransform.Position.y * 100) / 100, Mathf.Round(activePlayerIsoTransform.Position.z * 100) / 100);
+                    yield return null;
+                }
+                activePlayerIsoTransform.GetComponent<IsoTransform>().Position = newPos;
+                newPos = activePlayerIsoTransform.Position + v * 0.4f;
+                while (roundPos != newPos)
+                {
+                    activePlayerIsoTransform.Translate(v * walkSpeed);
+                    roundPos = new Vector3(Mathf.Round(activePlayerIsoTransform.Position.x * 100) / 100, activePlayerIsoTransform.Position.y, Mathf.Round(activePlayerIsoTransform.Position.z * 100) / 100);
+                    yield return null;
+                }
+                activePlayerIsoTransform.Position = newPos;
+
+            }
+            
+
+        }
+        playerAnim.SetBool("isWalking", false);
+        c.go.GetComponent<SpriteRenderer>().enabled = true;
+        c.go.SetActive(false);
+        origin.passable = true;
+        origin.standable = true;
+        //UpdateMovementGrid();
+    }
+
+    //CALCULATORY FUNCTIONS
+
     private float HeightDifferenceCheck(GridInfo a, GridInfo b)
     {
-        float hDif = Mathf.Abs(a.isoPos.y - b.isoPos.y);
-        Debug.Log("The height difference is " + hDif);
+        float hDif;
+        try
+        {
+            hDif = b.isoPos.y - a.isoPos.y;
+        }
+        catch
+        {
+            hDif = Single.PositiveInfinity;
+        }
+        //Debug.Log("The height difference is " + hDif);
         return hDif;
+    }
+
+    private GridInfo CarthesianFind(List<GridInfo> parent, float xC, float zC)
+    {
+        GridInfo tile = null;
+        tile = parent.Find(x => x.isoPos.x == playerIsoPos.x + xC && x.isoPos.z == playerIsoPos.z + zC);
+        return tile;
+    }
+
+    private Vector2 CarthesianCoords(GridInfo g)
+    {
+        Vector2 coords = new Vector2(g.isoPos.x - playerIsoPos.x, g.isoPos.z - playerIsoPos.z);
+        return coords;
     }
 }
