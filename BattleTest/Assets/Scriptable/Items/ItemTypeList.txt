@@ -1,0 +1,4 @@
+0	General Armor
+
+4	Short Swords
+5	Wooden Staff

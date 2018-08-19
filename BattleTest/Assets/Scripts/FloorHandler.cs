@@ -30,8 +30,7 @@ public class FloorHandler : MonoBehaviour
     {
         public GameObject go;
         public Vector3 isoPos;
-        public bool passable = true;
-        public bool standable = true;
+        public sbyte pop; //-1 for enemies, 0 for nothing, 1 for players
         public List<int> path;
         public List<float> pathDif;
     }
@@ -119,7 +118,7 @@ public class FloorHandler : MonoBehaviour
             try
             {
                 GridInfo g = Grid.Find(x => x.isoPos + new Vector3(0, 0.5f, 0) == p.GetComponent<IsoTransform>().Position);
-                g.standable = false;
+                g.pop = 1;
             }
             catch
             {
@@ -131,8 +130,7 @@ public class FloorHandler : MonoBehaviour
             try
             {
                 GridInfo g = Grid.Find(x => x.isoPos + new Vector3(0, 0.5f, 0) == p.GetComponent<IsoTransform>().Position);
-                g.standable = false;
-                g.passable = false;
+                g.pop = -1;
             }
             catch
             {
@@ -151,11 +149,13 @@ public class FloorHandler : MonoBehaviour
     public void UpdateMovementGrid(GameHandler.CharInfo chara)
     {
         GameObject activePlayer = chara.go;
+        playerMS = chara.ms;
+        playerJH = chara.jh;
         Debug.Log("Started UpdateMovementGrid");
         playerIsoPos = activePlayer.GetComponent<IsoTransform>().Position;
-        playerAnim = activePlayer.GetComponent<Animator>();
-        activePlayerIsoTransform = activePlayer.GetComponent<IsoTransform>();
-        inReach = Grid.FindAll(x => Mathf.Abs(x.isoPos.x - playerIsoPos.x) + Mathf.Abs(x.isoPos.z - playerIsoPos.z) <= playerMS && x.passable);// && Mathf.Abs(x.isoPos.y - playerIsoPos.y + 0.5f) <= playerJH);
+        inReach = Grid.FindAll(x => Mathf.Abs(x.isoPos.x - playerIsoPos.x) + Mathf.Abs(x.isoPos.z - playerIsoPos.z) <= playerMS);// && Mathf.Abs(x.isoPos.y - playerIsoPos.y + 0.5f) <= playerJH);
+        if (gg.Contains(chara.go)) inReach = inReach.FindAll(x => x.pop >= 0);
+        else if (bg.Contains(chara.go)) inReach = inReach.FindAll(x => x.pop <= 0);
         origin = inReach.Find(x => x.isoPos.x == playerIsoPos.x && x.isoPos.z == playerIsoPos.z);
 
         aList = new List<GridInfo>(); //targets that met the hDif criteria
@@ -254,7 +254,7 @@ public class FloorHandler : MonoBehaviour
                 }
             }
         }
-        gameHandler.activeChar.movable = aList;
+        chara.movable = aList;
         calcComplete = true;
         //foreach (GridInfo g in aList)
         //{
@@ -268,15 +268,19 @@ public class FloorHandler : MonoBehaviour
     {
         foreach (GridInfo g in chara.movable)
         {
-            if (g.standable) g.go.SetActive(true);
+            if (g.pop == 0) g.go.SetActive(true);
         }
     }
 
-    public IEnumerator GridClick(GameObject clickedGo)
+    public IEnumerator MoveClick(GameObject clickedGo)
     {
         Debug.Log("Coroutine started.");
         Debug.Log("Clicked GO: " + clickedGo.name);
-        GridInfo c = aList.Find(x => x.go == clickedGo);
+        List<GridInfo> newList = gameHandler.activeChar.movable;
+        GridInfo c = newList.Find(x => x.go == clickedGo);
+        activePlayerIsoTransform = gameHandler.activeChar.go.GetComponent<IsoTransform>();
+        playerAnim = gameHandler.activeChar.go.GetComponent<Animator>();
+        origin = Grid.Find(x => x.isoPos.x == activePlayerIsoTransform.Position.x && x.isoPos.z == activePlayerIsoTransform.Position.z);
         //for (int i = 0; i < c.path.Count; i++) Debug.Log("The " + i + " element of cPath is " + c.path[i]);
         //List<GridInfo> alts = bList.FindAll(x => x.go == c.go && x.path.Count == c.path.Count);
         //for(int n = 0; n < alts.Count; n++)
@@ -287,7 +291,7 @@ public class FloorHandler : MonoBehaviour
 
 
 
-        foreach(GridInfo g in aList)
+        foreach(GridInfo g in newList)
         {
             if (g != c) g.go.SetActive(false);
         }
@@ -380,8 +384,7 @@ public class FloorHandler : MonoBehaviour
         playerAnim.SetBool("isWalking", false);
         c.go.GetComponent<SpriteRenderer>().enabled = true;
         c.go.SetActive(false);
-        origin.passable = true;
-        origin.standable = true;
+        origin.pop = 0;
         //UpdateMovementGrid();
     }
 

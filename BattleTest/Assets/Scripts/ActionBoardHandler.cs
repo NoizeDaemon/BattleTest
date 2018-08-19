@@ -9,6 +9,7 @@ public class ActionBoardHandler : MonoBehaviour {
     public TextMeshProUGUI playerName;
 
     private bool hidden;
+    private bool off;
 
 
 	// Use this for initialization
@@ -32,6 +33,21 @@ public class ActionBoardHandler : MonoBehaviour {
         {
             hidden = true;
             anim.SetBool("Hide", true);
+        }
+    }
+
+    public void Toggle()
+    {
+        if (off)
+        {
+            off = false;
+            anim.SetBool("Hide", false);
+            anim.SetBool("EnemyTurn", false);
+        }
+        else
+        {
+            off = true;
+            anim.SetBool("EnemyTurn", true);
         }
     }
 }

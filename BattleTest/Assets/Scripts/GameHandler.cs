@@ -17,26 +17,31 @@ public class GameHandler : MonoBehaviour {
     private InfoBoardHandler infoBoardHandler;
     private ActionBoardHandler actionBoardHandler;
     public FloorHandler floorHandler;
-    private CamController camController;
+    public CamController camController;
 
-    //PlayerRelated
+    //CharacterRelated
     [System.Serializable]
     public class CharInfo
     {
         public GameObject go;
-        public int maxHp, currentHp, maxMp, currentMp, init;
+        public int maxHp, currentHp, maxMp, currentMp, init, ms;
+        public float jh;
         public bool[] status = new bool[6];
-        public List<FloorHandler.GridInfo> movable;
-        public List<FloorHandler.GridInfo> attackable;
+        public List<FloorHandler.GridInfo> movable, attackable;
     }
-    public List<CharInfo> player;
-    public List<CharInfo> enemy;
+    public List<CharInfo> playerInfo, enemyInfo;
+    //[HideInInspector]
+    public List<CharInfo> everyInfo;
     public CharInfo activeChar;
+
     //MovementRelated
     [HideInInspector]
     public bool canBeCancelled;
     [HideInInspector]
     public bool canBeUndone;
+
+    //BattleRelated
+    public int roundCount;
 
 
     //Phases:
@@ -55,6 +60,10 @@ public class GameHandler : MonoBehaviour {
         infoBoardHandler = infoBoard.GetComponent<InfoBoardHandler>();
         actionBoardHandler = actionBoard.GetComponent<ActionBoardHandler>();
         //ObjectReference Initialization
+        everyInfo = new List<CharInfo>(playerInfo);
+        everyInfo.AddRange(enemyInfo);
+        everyInfo.Sort((a, b) => a.init.CompareTo(b.init));
+        everyInfo.Reverse();
 
         StartCoroutine(WaitForInitialization());
 	}
@@ -65,13 +74,18 @@ public class GameHandler : MonoBehaviour {
         Debug.Log("Started waiting at " + Time.time);
         yield return new WaitUntil(() => floorHandler.initComplete);
         Debug.Log("FloorHandler initialized at " + Time.time);
-        floorHandler.UpdateMovementGrid(activeChar);
-        Debug.Log("Waiting for UpdateMovementGrid to finish...");
-        Debug.Log("Started waiting at " + Time.time);
-        yield return new WaitUntil(() => floorHandler.calcComplete);
-        Debug.Log("Completed at " + Time.time);
-        floorHandler.calcComplete = false;
-        HideIntroBoard();
+        foreach(CharInfo chara in everyInfo)
+        {
+            floorHandler.UpdateMovementGrid(chara);
+            Debug.Log("Waiting for UpdateMovementGrid to finish...");
+            Debug.Log("Started waiting at " + Time.time);
+            yield return new WaitUntil(() => floorHandler.calcComplete);
+            Debug.Log("Completed at " + Time.time);
+            floorHandler.calcComplete = false;
+        }
+        introBoard.GetComponent<Button>().enabled = true;
+        activeChar = everyInfo[0];
+        UpdateInfoBoard(activeChar);
         floorHandler.DisplayMovementGrid(activeChar);
     }
 
@@ -94,10 +108,21 @@ public class GameHandler : MonoBehaviour {
         }
     }
 
+    public void GridClick(GameObject g)
+    {
+        StartCoroutine(floorHandler.MoveClick(g));
+    }
 
     public void HideIntroBoard()
     {
         introBoard.GetComponent<Animator>().SetBool("Hide", true);
+    }
+
+    public void UpdateInfoBoard(CharInfo chara)
+    {
+        infoBoardHandler.charName.text = chara.go.name;
+        infoBoardHandler.hp.text = chara.currentHp + "/" + chara.maxHp;
+        infoBoardHandler.mp.text = chara.currentMp + "/" + chara.maxMp;
     }
 }
 

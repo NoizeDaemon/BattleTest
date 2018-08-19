@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class InfoBoardHandler : MonoBehaviour {
 
@@ -8,6 +9,7 @@ public class InfoBoardHandler : MonoBehaviour {
     private bool hidden;
     public List<GameObject> status;
     public GameObject slowed, noJump, noMove, noAction, dead, fine;
+    public TextMeshProUGUI charName, hp, mp;
 
 
 	// Use this for initialization

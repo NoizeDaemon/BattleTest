@@ -6,13 +6,13 @@ using UnityEngine.EventSystems;
 
 public class GridSender : MonoBehaviour
 {
-    private FloorHandler floorHandler;
+    private GameHandler gameHandler;
     private Vector3 pos;
 
 	// Use this for initialization
 	void Start ()
 	{
-	    floorHandler = GameObject.Find("FloorHandler").GetComponent<FloorHandler>();
+	    gameHandler = GameObject.Find("GameHandler").GetComponent<GameHandler>();
         //var all = this.name.Split('/');
         //pos = new Vector3(float.Parse(all[0]), float.Parse(all[1]), float.Parse(all[2]));
     }
@@ -30,6 +30,6 @@ public class GridSender : MonoBehaviour
     private void OnMouseUpAsButton()
     {
         //Debug.Log("Clicked: " + this.name);
-        StartCoroutine(floorHandler.GridClick(this.gameObject));
+        gameHandler.GridClick(this.gameObject);
     }
 }
