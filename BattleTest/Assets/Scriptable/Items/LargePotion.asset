@@ -9,24 +9,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7f006f933a9709348a98a25a02880d44, type: 3}
-  m_Name: Gladius
+  m_Name: LargePotion
   m_EditorClassIdentifier: 
-  name: Gladius
-  description: A short sword made out of cheap materials.
-  newValue: 50
-  usedValue: 20
+  name: Large Potion
+  description: Heals for 200HP.
+  newValue: 80
+  usedValue: 30
   rarity: 0
-  type: 4
-  weight: 850
-  hpFactor: 0
-  hpFlat: 0
-  mpFactor: 0
-  mpFlat: 0
-  ad: 0
-  ap: 0
-  ar: 0
-  mr: 0
-  init: 0
-  initFactor: 0
-  acFactor: 0
-  luckFactor: 0
+  type: 0
+  weight: 0
+  hpRestore: 200
+  mpRestore: 0
+  statusRestore: 

@@ -1,10 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Assets.UltimateIsometricToolkit.Scripts.Core;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
 public class GameHandler : MonoBehaviour {
+
+    //Testing
+    public Skill skill;
+
+    //PhaseManagement
+    public byte gridColor; //
+    public char action;
+
+    //TurnManagement
+    public int turnCount; 
+    public byte charCount;
+    public bool movementIsPerm;
+    public bool endTurn;
 
     //UI
     public GameObject infoBoard, actionBoard, introBoard;
@@ -30,6 +44,8 @@ public class GameHandler : MonoBehaviour {
         public List<FloorHandler.GridInfo> movable, attackable;
     }
     public List<CharInfo> playerInfo, enemyInfo;
+
+    public List<Character> tList;
     //[HideInInspector]
     public List<CharInfo> everyInfo;
     public CharInfo activeChar;
@@ -41,7 +57,7 @@ public class GameHandler : MonoBehaviour {
     public bool canBeUndone;
 
     //BattleRelated
-    public int roundCount;
+
 
 
     //Phases:
@@ -55,7 +71,15 @@ public class GameHandler : MonoBehaviour {
     //5) LevelUpSequence
 
 	// Use this for initialization
-	void Start () {
+	void Start ()
+	{
+	    //foreach (Character t in tList)
+	    //{
+	    //    t.currentHp -= (int) SkillCalculations.ForceDictionary[skill.forceIndex].DynamicInvoke(activeChar, t);
+	    //}
+         
+
+	    gridColor = 1;
         //ScriptReference Initialization
         infoBoardHandler = infoBoard.GetComponent<InfoBoardHandler>();
         actionBoardHandler = actionBoard.GetComponent<ActionBoardHandler>();
@@ -74,7 +98,7 @@ public class GameHandler : MonoBehaviour {
         Debug.Log("Started waiting at " + Time.time);
         yield return new WaitUntil(() => floorHandler.initComplete);
         Debug.Log("FloorHandler initialized at " + Time.time);
-        foreach(CharInfo chara in everyInfo)
+        foreach (CharInfo chara in everyInfo)
         {
             floorHandler.UpdateMovementGrid(chara);
             Debug.Log("Waiting for UpdateMovementGrid to finish...");
@@ -84,9 +108,57 @@ public class GameHandler : MonoBehaviour {
             floorHandler.calcComplete = false;
         }
         introBoard.GetComponent<Button>().enabled = true;
-        activeChar = everyInfo[0];
-        UpdateInfoBoard(activeChar);
-        floorHandler.DisplayMovementGrid(activeChar);
+        NextChar();
+    }
+
+    IEnumerator MovementCycleTest()
+    {
+        for (int r = 1; r < 11; r++)
+        {
+            Debug.Log("ROUND: " + r);
+            foreach (CharInfo t in everyInfo)
+            {
+                activeChar = t;
+                UpdateInfoBoard(activeChar);
+                floorHandler.ToggleMovementGrid(activeChar, true);
+                yield return new WaitUntil(() => floorHandler.moveComplete);
+                floorHandler.moveComplete = false;
+                foreach (CharInfo chara in everyInfo)
+                {
+                    floorHandler.UpdateMovementGrid(chara);
+                    Debug.Log("Waiting for UpdateMovementGrid(" + chara.go.name + ") to finish...");
+                    Debug.Log("Started waiting at " + Time.time);
+                    yield return new WaitUntil(() => floorHandler.calcComplete);
+                    Debug.Log("Completed at " + Time.time);
+                    floorHandler.calcComplete = false;
+                }
+            }
+        }
+    }
+
+    private void NextChar()
+    {
+        activeChar = everyInfo[charCount];
+        endTurn = false;
+        movementIsPerm = false;
+        StartCoroutine(camController.SmoothFocus(activeChar.go));
+        camController.canBeMoved = true;
+        //if (playerInfo.Contains(activeChar)) StartCoroutine(PlayerTurn());
+        //else StartCoroutine(EnemyTurn());
+        //testing
+        StartCoroutine(PlayerTurn());
+        
+    }
+
+    IEnumerator PlayerTurn()
+    {
+        actionBoardHandler.Toggle(true);
+        yield return new WaitUntil(() => endTurn);
+    }
+
+    IEnumerator EnemyTurn()
+    {
+        yield return null;
     }
 
     // Update is called once per frame
@@ -96,21 +168,123 @@ public class GameHandler : MonoBehaviour {
 
     public void MovementButtonPress()
     {
+        gridColor = 0;
+        action = 'm';
         if(!canBeCancelled && !canBeUndone)
         {
-            floorHandler.UpdateMovementGrid(activeChar); //Should be done at the start of turn
+            foreach (Button b in actionButton)
+            {
+                if (b != null && b != actionButton[0]) b.interactable = false;
+            }
+            floorHandler.ToggleMovementGrid(activeChar, true);
             actionButton[0].GetComponentInChildren<TextMeshProUGUI>().text = "cancel";
-            actionButton[0].interactable = false;
+            canBeCancelled = true;
+            //actionButton[0].interactable = false;
         }
         else if (canBeCancelled)
         {
+            foreach (Button b in actionButton)
+            {
+                if (b != null && b != actionButton[0]) b.interactable = true;
+            }
+            floorHandler.ToggleMovementGrid(activeChar, false);
+            actionButton[0].GetComponentInChildren<TextMeshProUGUI>().text = "movement";
+            canBeCancelled = false;
+        }
+        else if (canBeUndone)
+        {
+            foreach (Button b in actionButton)
+            {
+                if (b != null && b != actionButton[0]) b.interactable = false;
+            }
+            activeChar.go.GetComponent<IsoTransform>().Position = floorHandler.originalCharPos;
+            StopCoroutine(floorHandler.MoveClick(floorHandler.lastClicked));
+            floorHandler.ToggleMovementGrid(activeChar, true);
+            actionButton[0].GetComponentInChildren<TextMeshProUGUI>().text = "cancel";
+            canBeCancelled = true;
+            canBeUndone = false;
+        }
+    }
 
+    public void AttackButtonPress()
+    {
+        gridColor = 1;
+        action = 'a';
+
+        floorHandler.ToggleAttackGrid(activeChar, true);
+    }
+
+    public void EndButtonPress()
+    {
+        StartCoroutine(EndTurn());
+    }
+
+    public void ButtonStateCheck()
+    {
+        foreach (Button b in actionButton)
+        {
+            if (b != null && b != actionButton[0]) b.interactable = true;
         }
     }
 
     public void GridClick(GameObject g)
     {
-        StartCoroutine(floorHandler.MoveClick(g));
+        switch (action)
+        {
+            case 'm':
+                StartCoroutine(floorHandler.MoveClick(g));
+                break;
+            case 'a':
+                AttackClick(g);
+                break;
+        }
+        
+    }
+
+    private void AttackClick(GameObject g)
+    {
+        var clicked = floorHandler.Grid.Find(x => x.go == g);
+        if (clicked.pop != 0)
+        {
+            floorHandler.ToggleAttackGrid(activeChar, false);
+            Debug.Log("Someone hit someone.");
+            actionButton[1].interactable = false;
+            if (canBeUndone)
+            {
+                actionButton[0].interactable = false;
+                movementIsPerm = true;
+            }
+        }
+    }
+
+    IEnumerator EndTurn()
+    {
+        movementIsPerm = true;
+        canBeUndone = false;
+        canBeCancelled = false;
+        actionButton[0].interactable = true;
+        actionButton[1].interactable = true;
+        if (floorHandler.lastDisplayed != null)
+        {
+            foreach (FloorHandler.GridInfo gr in floorHandler.lastDisplayed)
+            {
+                gr.go.SetActive(false);
+            }
+        }
+        actionButton[0].GetComponentInChildren<TextMeshProUGUI>().text = "movement";
+        yield return new WaitUntil(() => floorHandler.calcComplete);
+        foreach (CharInfo chara in everyInfo)
+        {
+            floorHandler.UpdateMovementGrid(chara);
+            Debug.Log("Waiting for UpdateMovementGrid to finish...");
+            Debug.Log("Started waiting at " + Time.time);
+            yield return new WaitUntil(() => floorHandler.calcComplete);
+            Debug.Log("Completed at " + Time.time);
+            floorHandler.calcComplete = false;
+        }
+        charCount += 1;
+        if (charCount >= everyInfo.Count) charCount = 0;
+        NextChar();
     }
 
     public void HideIntroBoard()

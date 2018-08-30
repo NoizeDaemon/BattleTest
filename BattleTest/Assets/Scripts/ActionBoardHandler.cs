@@ -36,9 +36,9 @@ public class ActionBoardHandler : MonoBehaviour {
         }
     }
 
-    public void Toggle()
+    public void Toggle(bool state)
     {
-        if (off)
+        if (state)
         {
             off = false;
             anim.SetBool("Hide", false);

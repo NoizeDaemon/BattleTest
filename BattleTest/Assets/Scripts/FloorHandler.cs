@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Remoting.Channels;
 using Assets.UltimateIsometricToolkit.Scripts.Core;
+using TMPro;
 using UnityEngine;
 using UltimateIsometricToolkit;
 using UnityEditor;
@@ -12,8 +13,7 @@ using UnityEditor;
 public class FloorHandler : MonoBehaviour
 {
     public GameHandler gameHandler;
-    public bool initComplete;
-    public bool calcComplete;
+    public bool initComplete, calcComplete, moveComplete;
 
     [System.Serializable]
     public class TileInfo
@@ -54,7 +54,7 @@ public class FloorHandler : MonoBehaviour
     public List<GameObject> bg;
     public GameObject gridPrefab;
     public IsoTransform activePlayerIsoTransform;
-    public Vector3 playerIsoPos;
+    public Vector3 playerIsoPos, originalCharPos;
 
     public float walkSpeed;
     private Animator playerAnim;
@@ -64,6 +64,8 @@ public class FloorHandler : MonoBehaviour
     private List<GridInfo>[] pathfinding;
     private List<GridInfo> inReach, aList, bList; //inReach = every floortile in movement distance, aList = inReach checked for height, minimal movement distance, bList = -,,- any move distance
     private GridInfo origin, current, target;
+    public GameObject lastClicked;
+    public List<GridInfo> lastDisplayed;
 
     public int playerMS;
     public float playerJH;
@@ -148,22 +150,40 @@ public class FloorHandler : MonoBehaviour
 
     public void UpdateMovementGrid(GameHandler.CharInfo chara)
     {
-        GameObject activePlayer = chara.go;
+        calcComplete = false;
+        GameObject activePlayer = new GameObject();
+        activePlayer = chara.go;
         playerMS = chara.ms;
         playerJH = chara.jh;
         Debug.Log("Started UpdateMovementGrid");
+        playerIsoPos = new Vector3();
         playerIsoPos = activePlayer.GetComponent<IsoTransform>().Position;
-        inReach = Grid.FindAll(x => Mathf.Abs(x.isoPos.x - playerIsoPos.x) + Mathf.Abs(x.isoPos.z - playerIsoPos.z) <= playerMS);// && Mathf.Abs(x.isoPos.y - playerIsoPos.y + 0.5f) <= playerJH);
-        if (gg.Contains(chara.go)) inReach = inReach.FindAll(x => x.pop >= 0);
-        else if (bg.Contains(chara.go)) inReach = inReach.FindAll(x => x.pop <= 0);
+        var gridList = new List<GridInfo>();
+        gridList = Grid.FindAll(x => Mathf.Abs(x.isoPos.x - playerIsoPos.x) + Mathf.Abs(x.isoPos.z - playerIsoPos.z) <= playerMS);// && Mathf.Abs(x.isoPos.y - playerIsoPos.y + 0.5f) <= playerJH);
+        if (gg.Contains(chara.go)) gridList = gridList.FindAll(x => x.pop >= 0);
+        else if (bg.Contains(chara.go)) gridList = gridList.FindAll(x => x.pop <= 0);
+        inReach = new List<GridInfo>();
+        foreach (GridInfo g in gridList)
+        {
+            GridInfo temp = new GridInfo
+            {
+                go = g.go,
+                isoPos = g.isoPos,
+                pop = g.pop
+            };
+            inReach.Add(temp);
+        }
+        //origin = new GridInfo();
         origin = inReach.Find(x => x.isoPos.x == playerIsoPos.x && x.isoPos.z == playerIsoPos.z);
+        //Debug.Log("Char = " + chara.go.name + " Origin: " + origin.isoPos);
 
         aList = new List<GridInfo>(); //targets that met the hDif criteria
         List<GridInfo> cList = new List<GridInfo>(); //checked currents
         bList = new List<GridInfo>(); //alternatives
 
         pathfinding = new List<GridInfo>[playerMS];
-        pathfinding[0] = inReach.FindAll(x => CarthesianCoords(x).magnitude == 1 && Mathf.Abs(HeightDifferenceCheck(origin, x)) <= playerJH);
+        pathfinding[0] = new List<GridInfo>();
+        pathfinding[0] = inReach.FindAll(x => CarthesianCoords(x).magnitude <= 1.2f && Mathf.Abs(HeightDifferenceCheck(origin, x)) <= playerJH);
         foreach(GridInfo g in pathfinding[0])
         {
             g.path = new List<int>();
@@ -171,8 +191,7 @@ public class FloorHandler : MonoBehaviour
             else if (CarthesianCoords(g).x == -1) g.path.Add(2);
             else if (CarthesianCoords(g).y == 1) g.path.Add(3);
             else if (CarthesianCoords(g).y == -1) g.path.Add(1);
-            g.pathDif = new List<float>();
-            g.pathDif.Add(HeightDifferenceCheck(origin, g));
+            g.pathDif = new List<float>() {HeightDifferenceCheck(origin, g)};
         }
         cList.Add(origin);
         aList.AddRange(pathfinding[0]);
@@ -254,7 +273,13 @@ public class FloorHandler : MonoBehaviour
                 }
             }
         }
-        chara.movable = aList;
+        chara.movable = new List<GridInfo>(aList);
+
+        //aList = null;
+        //cList = null;
+        //pathfinding = null;
+        //current = null;
+        //target = null;
         calcComplete = true;
         //foreach (GridInfo g in aList)
         //{
@@ -264,23 +289,63 @@ public class FloorHandler : MonoBehaviour
         //gameHandler.actionButton[0].interactable = true;
     }
 
-    public void DisplayMovementGrid(GameHandler.CharInfo chara)
+    public void ToggleMovementGrid(GameHandler.CharInfo chara, bool state)
     {
-        foreach (GridInfo g in chara.movable)
+        lastDisplayed = new List<GridInfo>();
+        if (state)
         {
-            if (g.pop == 0) g.go.SetActive(true);
+            foreach (GridInfo g in chara.movable)
+            {
+                if (g.pop == 0) g.go.SetActive(true);
+                lastDisplayed.Add(g);
+            }
+        }
+        else
+        {
+            foreach (GridInfo g in chara.movable)
+            {
+                g.go.SetActive(false);
+            }
+            lastDisplayed = null;
+        }
+    }
+
+    public void ToggleAttackGrid(GameHandler.CharInfo chara, bool state)
+    {
+        if (state)
+        {
+            playerIsoPos = chara.go.GetComponent<IsoTransform>().Position;
+            //var center = Grid.Find(x => x.isoPos.x == playerIsoPos.x && x.isoPos.z == playerIsoPos.z);
+            var attackList = Grid.FindAll(x => CarthesianCoords(x).magnitude == 1);
+            foreach (GridInfo g in attackList)
+            {
+                g.go.SetActive(true);
+            }
+            lastDisplayed = new List<GridInfo>();
+            lastDisplayed = attackList;
+        }
+        else
+        {
+            foreach (GridInfo g in lastDisplayed)
+            {
+                g.go.SetActive((false));
+            }
+            lastDisplayed = null;
         }
     }
 
     public IEnumerator MoveClick(GameObject clickedGo)
     {
+        calcComplete = false;
         Debug.Log("Coroutine started.");
         Debug.Log("Clicked GO: " + clickedGo.name);
         List<GridInfo> newList = gameHandler.activeChar.movable;
         GridInfo c = newList.Find(x => x.go == clickedGo);
         activePlayerIsoTransform = gameHandler.activeChar.go.GetComponent<IsoTransform>();
         playerAnim = gameHandler.activeChar.go.GetComponent<Animator>();
-        origin = Grid.Find(x => x.isoPos.x == activePlayerIsoTransform.Position.x && x.isoPos.z == activePlayerIsoTransform.Position.z);
+        originalCharPos = activePlayerIsoTransform.Position;
+        origin = Grid.Find(x => x.isoPos.x == originalCharPos.x && x.isoPos.z == originalCharPos.z);
+        lastClicked = clickedGo;
         //for (int i = 0; i < c.path.Count; i++) Debug.Log("The " + i + " element of cPath is " + c.path[i]);
         //List<GridInfo> alts = bList.FindAll(x => x.go == c.go && x.path.Count == c.path.Count);
         //for(int n = 0; n < alts.Count; n++)
@@ -376,16 +441,22 @@ public class FloorHandler : MonoBehaviour
                     yield return null;
                 }
                 activePlayerIsoTransform.Position = newPos;
-
             }
-            
-
+            //Debug.Log("Finished this partial movement.");
         }
         playerAnim.SetBool("isWalking", false);
         c.go.GetComponent<SpriteRenderer>().enabled = true;
         c.go.SetActive(false);
+        moveComplete = true;
+        gameHandler.canBeUndone = true;
+        gameHandler.canBeCancelled = false;
+        gameHandler.actionButton[0].GetComponent<TextMeshProUGUI>().text = "undo";
+        gameHandler.ButtonStateCheck();
+        yield return new WaitUntil(() => gameHandler.movementIsPerm);
         origin.pop = 0;
-        //UpdateMovementGrid();
+        var postPos = Grid.Find(x => x.go == clickedGo);
+        postPos.pop = (gg.Contains(gameHandler.activeChar.go)) ? (sbyte) 1 : (sbyte) -1;
+        calcComplete = true;
     }
 
     //CALCULATORY FUNCTIONS

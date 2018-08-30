@@ -19,7 +19,6 @@ public class CamController : MonoBehaviour
 	void Start ()
 	{
 	    cam = this.GetComponent<Camera>();
-        canBeMoved = true;
 	}
 	
 	// Update is called once per frame
@@ -41,9 +40,31 @@ public class CamController : MonoBehaviour
 	    cam.orthographicSize = Mathf.Clamp(cam.orthographicSize - Input.GetAxis("Mouse ScrollWheel") * mapZoomSensitivity, zoomClampMin, zoomClampMax);
 	}
 
-    public void FollowCharacter(GameObject chara)
+    public void FollowCharacter(GameObject chara, bool state)
     {
-        charToFollow = chara;
-        isFollowingChar = true;
+        if (state)
+        {
+            charToFollow = chara;
+            canBeMoved = false;
+            isFollowingChar = true;
+        }
+        else
+        {
+            isFollowingChar = false;
+            canBeMoved = true;
+        }
+
+    }
+
+    public IEnumerator SmoothFocus(GameObject chara)
+    {
+        Vector3 deltaVec = new Vector3(cam.transform.position.x, cam.transform.position.y, 0) - new Vector3(chara.transform.position.x, chara.transform.position.y, 0);
+        Vector3 direction = -deltaVec;
+        while (deltaVec.magnitude > 0.5f)
+        {
+            cam.transform.Translate(direction * 0.1f);
+            deltaVec = new Vector3(cam.transform.position.x, cam.transform.position.y, 0) - new Vector3(chara.transform.position.x, chara.transform.position.y, 0);
+            yield return null;
+        }
     }
 }

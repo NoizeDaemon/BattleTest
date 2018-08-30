@@ -9,24 +9,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7f006f933a9709348a98a25a02880d44, type: 3}
-  m_Name: Cotton Shirt
+  m_Name: MediumPotion
   m_EditorClassIdentifier: 
-  name: Cotton Shirt
-  description: A simply piece of clothing.
-  newValue: 50
+  name: Medium Potion
+  description: Heals for 100HP.
+  newValue: 45
   usedValue: 20
   rarity: 0
   type: 0
-  weight: 130
-  hpFactor: 0
-  hpFlat: 0
-  mpFactor: 0
-  mpFlat: 0
-  ad: 0
-  ap: 0
-  ar: 10
-  mr: 0
-  init: 0
-  initFactor: 0
-  acFactor: 0
-  luckFactor: 0
+  weight: 250
+  hpRestore: 100
+  mpRestore: 0
+  statusRestore: 
