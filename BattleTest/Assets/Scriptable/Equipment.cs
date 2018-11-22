@@ -7,20 +7,16 @@ public class Equipment : ScriptableObject {
 
     public new string name;
     public string description;
+    public string type;
     public int newValue;
     public int usedValue;
     public byte rarity;
-    public byte type;
     public int weight;
 
     public int mpFlat;
 
-    public int ad;
-    public int ap;
-    public int ar;
-    public int mr;
+    public int ad, ap, ar, mr, ev, im, ac, luck, init;
 
-    public byte init;
     public float initFactor;
     public float acFactor;
     public float luckFactor;

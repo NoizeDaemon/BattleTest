@@ -15,4 +15,6 @@ public class Skill : ScriptableObject
 
     public byte forceIndex; //See reference table
     public byte chanceIndex; //See reference table
+
+    public int requiredSkillPoints;
 }

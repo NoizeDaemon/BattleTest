@@ -8,4 +8,16 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/DataPersistencyTest_1.unity
+    guid: d14f589a511323048a4a7b09f0a554bd
+  - enabled: 1
+    path: Assets/Scenes/DataPersistencyTest_2.unity
+    guid: 77be34bd33f98654493b2631010af99d
+  - enabled: 1
+    path: Assets/Scenes/DataPersistencyTest_3.unity
+    guid: a81d340ac9eca304393b05449a438d81
+  - enabled: 1
+    path: Assets/Scenes/DataPersistencyTest_4.unity
+    guid: eb64c3c1d405c57448ec8c7d1056b8e9
   m_configObjects: {}

@@ -4,8 +4,26 @@ using UnityEngine;
 
 public class Character : MonoBehaviour
 {
+    public new string name;
+    public int charIndex;
+    public string description;
+    public string mood;
+
+    public Race race;
+    public Class activeClass;
+
+    public List<Skill> learnedSkills;
+
+    public class SkillInLearning
+    {
+        public Skill skillToBeLearned;
+        public int progress;
+    }
+
+    public List<SkillInLearning> skillsTobeLearned;
+
     //BaseStats
-    public int currentHp, maxHp, currentMp, maxMp, init, acc, ad, ap, ar, mr, ev, ac;
+    public int currentHp, maxHp, currentMp, maxMp, init, luck, ad, ap, ar, mr, ev, im, ac;
 
     //Equipment
     public Equipment head;

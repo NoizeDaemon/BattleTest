@@ -18,7 +18,12 @@ public class Class : ScriptableObject
 
     //Requirements
     //public List<Race> raceReq;
-    public List<SkillReq> skillReqs;
+    public List<SkillReq> classReqs;
+    public List<Skill> skillReqs;
+
+    //Class specifics
+    public List<Equipment> wearables;
+    public List<Skill> learnables;
 
     //StatsGrowth
     public float
